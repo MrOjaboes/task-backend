@@ -38,27 +38,45 @@ class TaskController extends Controller
     }
     public function show($id)
     {
-        $task = Task::find($id);
-        return response()->json($task);
+        if (Task::where('id',$id)->exists()) {
+            $task = Task::find($id);
+            return response()->json($task);
+        }else {
+            return response()->json('Task Record Not Found',404);
+        }
+
+
     }
     public function update(Request $request, $id)
     {
 
-        $task = Task::find($id);
-        $task->title = $request->title;
-        $task->update();
-        return response()->json([
-            'status' => 200,
-            'data' => $task,
-            'message' => 'Task Updated Successfully',
-        ]);
+        if (Task::where('id',$id)->exists()) {
+            $task = Task::find($id);
+            $task->title = $request->title;
+            $task->update();
+            return response()->json([
+                'status' => 200,
+                'data' => $task,
+                'message' => 'Task Updated Successfully',
+            ]);
+        }else{
+            return response()->json('Task Record Not Found',404);
+        }
+
+
     }
     public function destroy($id)
     {
-        //return 'ok';
-        $task = Task::find($id);
-        return $task;
+
+        if (Task::where('id',$id)->exists()) {
+            $task = Task::find($id);
         $task->delete();
         return response()->json('Task Details deleted successfully');
+
+        }else{
+            return response()->json('Task Record not Found',404);
+        }
+
+
     }
 }
